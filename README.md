@@ -1,13 +1,13 @@
-[![Go Report Card](https://goreportcard.com/badge/github.com/XanthusL/zset)](https://goreportcard.com/report/github.com/XanthusL/zset)
+[![Go Report Card](https://goreportcard.com/badge/github.com/aiseeq/zset)](https://goreportcard.com/report/github.com/aiseeq/zset)
 # zset
 Implementing sorted set in Redis with golang.
 
 ## TODO
-Key type int64 to string, or just waiting for generics.
+Key type uint32
 
 ## Installation
 ```bash
-go get -u github.com/XanthusL/zset
+go get -u github.com/aiseeq/zset
 ```
 
 ## Usage
