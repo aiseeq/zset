@@ -35,12 +35,6 @@ func TestNew(t *testing.T) {
 	} else {
 		t.Error("Key:", 1001, "Rank:", rank, "Score:", score, "Extra:", extra)
 	}
-	rank, score, extra = s.GetRank(-1, false)
-	if rank == -1 {
-		t.Log("Key:", -1, "Rank:", rank, "Score:", score, "Extra:", extra)
-	} else {
-		t.Error("Key:", -1, "Rank:", rank, "Score:", score, "Extra:", extra)
-	}
 
 	id, score, extra := s.GetDataByRank(0, true)
 	t.Log("GetData[REVERSE] Rank:", 0, "ID:", id, "Score:", score, "Extra:", extra)
@@ -65,12 +59,12 @@ func TestNew(t *testing.T) {
 
 func TestIncrBy(t *testing.T) {
 	z := New()
-	for i := 1000; i < 1100; i++ {
-		z.Set(float64(i), int64(i), "Hello world")
+	for i := uint32(1000); i < 1100; i++ {
+		z.Set(i, i, "Hello world")
 	}
 	rank, score, _ := z.GetRank(1050, false)
-	curScore, _ := z.IncrBy(1.5, 1050)
-	if score+1.5 != curScore {
+	curScore, _ := z.IncrBy(2, 1050)
+	if score+2 != curScore {
 		t.Error(score, curScore)
 	}
 	r2, score2, _ := z.GetRank(1050, false)
@@ -85,15 +79,15 @@ func TestIncrBy(t *testing.T) {
 
 func TestRange(t *testing.T) {
 	z := New()
-	z.Set(1.0, 1001, nil)
-	z.Set(2.0, 1002, nil)
-	z.Set(3.0, 1003, nil)
-	z.Set(4.0, 1004, nil)
-	z.Set(5.0, 1005, nil)
-	z.Set(6.0, 1006, nil)
+	z.Set(1, 1001, nil)
+	z.Set(2, 1002, nil)
+	z.Set(3, 1003, nil)
+	z.Set(4, 1004, nil)
+	z.Set(5, 1005, nil)
+	z.Set(6, 1006, nil)
 
-	ids := make([]int64, 0, 6)
-	z.Range(0, -1, func(score float64, k int64, _ interface{}) {
+	ids := make([]uint32, 0, 6)
+	z.Range(0, 10, func(score uint32, k uint32, _ interface{}) {
 		ids = append(ids, k)
 		t.Log(score, k)
 	})
@@ -103,7 +97,7 @@ func TestRange(t *testing.T) {
 		ids[3] != 1004 {
 		t.Fail()
 	}
-	z.RevRange(1, 3, func(score float64, k int64, _ interface{}) {
+	z.RevRange(1, 3, func(score uint32, k uint32, _ interface{}) {
 		t.Log(score, k)
 	})
 
@@ -112,11 +106,11 @@ func TestRange(t *testing.T) {
 func BenchmarkSortedSet_Add(b *testing.B) {
 	b.StopTimer()
 	// data initialization
-	scores := make([]float64, b.N)
-	IDs := make([]int64, b.N)
+	scores := make([]uint32, b.N)
+	IDs := make([]uint32, b.N)
 	for i := range IDs {
-		scores[i] = rand.Float64() + float64(rand.Int31n(99))
-		IDs[i] = int64(i) + 100000
+		scores[i] = rand.Uint32()
+		IDs[i] = uint32(i + 100000)
 	}
 	// BCE
 	_ = scores[:b.N]
@@ -131,13 +125,13 @@ func BenchmarkSortedSet_Add(b *testing.B) {
 func BenchmarkSortedSet_GetRank(b *testing.B) {
 	l := s.Length()
 	for i := 0; i < b.N; i++ {
-		s.GetRank(100000+int64(i)%l, true)
+		s.GetRank(100000+uint32(i)%l, true)
 	}
 }
 
 func BenchmarkSortedSet_GetDataByRank(b *testing.B) {
 	l := s.Length()
 	for i := 0; i < b.N; i++ {
-		s.GetDataByRank(int64(i)%l, true)
+		s.GetDataByRank(uint32(i)%l, true)
 	}
 }

@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-go test -test.bench=".*"
+go test -bench=. -benchmem

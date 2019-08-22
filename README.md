@@ -2,9 +2,6 @@
 # zset
 Implementing sorted set in Redis with golang.
 
-## TODO
-Key type uint32
-
 ## Installation
 ```bash
 go get -u github.com/aiseeq/zset
@@ -36,18 +33,12 @@ dat, ok := s.GetData(1001)
 s.Delete(1001)
 
 // Increase score
-s.IncrBy(5.0, 1001)
+s.IncrBy(5, 1001)
 
 // ZRANGE, ASC
 five := make([]int64, 0, 5)
 s.Range(0, 5, func(score float64, k int64, _ interface{}) {
 	five = append(five, k)
-})
-
-// ZREVRANGE, DESC
-all := make([]int64, 0)
-s.RevRange(0, -1, func(score float64, k int64, _ interface{}) {
-	all = append(all, k)
 })
 
 
